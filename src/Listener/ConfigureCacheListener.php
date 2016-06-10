@@ -15,19 +15,42 @@ use Es\Services\ServicesTrait;
 use Es\System\ConfigInterface;
 use Es\System\SystemEvent;
 
+/**
+ * Configures cache.
+ */
 class ConfigureCacheListener
 {
     use ServicesTrait;
 
+    /**
+     * The adapter of cache.
+     *
+     * @var \Es\Cache\Adapter\AbstractCache
+     */
     protected $cache;
 
+    /**
+     * The system configuration.
+     *
+     * @var \Es\System\ConfigInterface
+     */
     protected $config;
 
+    /**
+     * Sets the cache adapter.
+     *
+     * @param \Es\Cache\Adapter\AbstractCache $cache The cache adapter
+     */
     public function setCache(AbstractCache $cache)
     {
         $this->cache = $cache->withNamespace('system');
     }
 
+    /**
+     * Gets the cache adapter.
+     *
+     * @param \Es\Cache\Adapter\AbstractCache The cache adapter
+     */
     public function getCache()
     {
         if (! $this->cache) {
@@ -39,11 +62,21 @@ class ConfigureCacheListener
         return $this->cache;
     }
 
+    /**
+     * Sets the system configuration.
+     *
+     * @param \Es\System\ConfigInterface $config The system configuration
+     */
     public function setConfig(ConfigInterface $config)
     {
         $this->config = $config;
     }
 
+    /**
+     * Gets the system configuration.
+     *
+     * @param \Es\System\ConfigInterface The system configuration
+     */
     public function getConfig()
     {
         if (! $this->config) {
@@ -55,6 +88,11 @@ class ConfigureCacheListener
         return $this->config;
     }
 
+    /**
+     * Configures the cache factory.
+     *
+     * @param \Es\System\SystemEvent $event The system event
+     */
     public function configureFactory(SystemEvent $event)
     {
         $systemConfig  = $this->getConfig();
@@ -66,6 +104,11 @@ class ConfigureCacheListener
         }
     }
 
+    /**
+     * Configures the namespace registered in the cache for system.
+     *
+     * @param \Es\System\SystemEvent $event The system event
+     */
     public function configureNamespace(SystemEvent $event)
     {
         $systemConfig = $this->getConfig();
