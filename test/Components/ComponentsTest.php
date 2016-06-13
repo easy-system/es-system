@@ -10,6 +10,7 @@
 namespace Es\System\Test\Components;
 
 use Es\Events\Events;
+use Es\Events\Listeners;
 use Es\Services\Provider;
 use Es\Services\Services;
 use Es\System\Components\Components;
@@ -28,12 +29,13 @@ class ComponentsTest extends \PHPUnit_Framework_TestCase
 
     public function testRegisterRaiseExceptionIfComponentsAlreadyInitialized()
     {
-        $services = new Services();
-        $events   = new Events();
-        $config   = new SystemConfig();
+        $services  = new Services();
+        $listeners = new Listeners();
+        $events    = new Events();
+        $config    = new SystemConfig();
 
         $components = new Components();
-        $components->init($services, $events, $config);
+        $components->init($services, $listeners, $events, $config);
         $this->setExpectedException('RuntimeException');
         $components->register(FakeComponent::CLASS);
     }
@@ -96,45 +98,50 @@ class ComponentsTest extends \PHPUnit_Framework_TestCase
 
     public function testIsInitialized()
     {
-        $services = new Services();
-        $events   = new Events();
-        $config   = new SystemConfig();
+        $services  = new Services();
+        $listeners = new Listeners();
+        $events    = new Events();
+        $config    = new SystemConfig();
 
         $components = new Components();
         $this->assertFalse($components->isInitialized());
 
-        $components->init($services, $events, $config);
+        $components->init($services, $listeners, $events, $config);
         $this->assertTrue($components->isInitialized());
     }
 
     public function testInitRaiseExceptionIfComponentsAlreadyInitialized()
     {
-        $services = new Services();
-        $events   = new Events();
-        $config   = new SystemConfig();
+        $services  = new Services();
+        $listeners = new Listeners();
+        $events    = new Events();
+        $config    = new SystemConfig();
 
         $components = new Components();
-        $components->init($services, $events, $config);
+        $components->init($services, $listeners, $events, $config);
 
         $this->setExpectedException('RuntimeException');
-        $components->init($services, $events, $config);
+        $components->init($services, $listeners, $events, $config);
     }
 
     public function testInitOnSuccess()
     {
-        $events   = new Events();
-        $config   = new SystemConfig();
-        $services = new Services();
-        $services->set('FakeListener', FakeListener::CLASS);
+        $events    = new Events();
+        $config    = new SystemConfig();
+        $services  = new Services();
+        $listeners = new Listeners();
+        $listeners->set('FakeListener', FakeListener::CLASS);
+        $services->set('Listeners', $listeners);
         Provider::setServices($services);
 
         $components = new Components();
         $components->register(FakeComponent::CLASS);
-        $components->init($services, $events, $config);
+        $components->init($services, $listeners, $events, $config);
 
         $component = $components->get(FakeComponent::CLASS);
 
         $this->assertSame($component->getServicesConfig(), $services->getRegistry());
+        $this->assertSame($component->getListenersConfig(), $listeners->getRegistry());
         $this->assertSame($component->getSystemConfig(), $config->toArray());
 
         $event = new SystemEvent();

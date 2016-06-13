@@ -17,6 +17,10 @@ use Es\System\SystemEvent;
 class FakeComponent implements ComponentInterface
 {
     protected $servicesConfig = [
+        'foo' => 'bar',
+    ];
+
+    protected $listenersConfig = [
         'FakeListener' => FakeListener::CLASS,
     ];
 
@@ -41,6 +45,11 @@ class FakeComponent implements ComponentInterface
     public function getServicesConfig()
     {
         return $this->servicesConfig;
+    }
+
+    public function getListenersConfig()
+    {
+        return $this->listenersConfig;
     }
 
     public function getEventsConfig()

@@ -14,6 +14,7 @@ use Es\Container\AbstractContainer;
 use Es\Container\Countable\CountableTrait;
 use Es\Container\Iterator\IteratorTrait;
 use Es\Events\EventsInterface;
+use Es\Events\ListenersInterface;
 use Es\Services\ServicesInterface;
 use Es\System\ConfigInterface;
 use InvalidArgumentException;
@@ -122,14 +123,16 @@ class Components extends AbstractContainer implements ComponentsInterface
     /**
      * Initializes components.
      *
-     * @param \Es\Services\ServicesInterface $services The services
-     * @param \Es\Events\EventsInterface     $events   The events
-     * @param \Es\System\ConfigInterface     $config   The system configuration
+     * @param \Es\Services\ServicesInterface $services  The services
+     * @param \Es\Events\ListenersInterface  $listeners The listeners
+     * @param \Es\Events\EventsInterface     $events    The events
+     * @param \Es\System\ConfigInterface     $config    The system configuration
      *
      * @throws \RuntimeException If the components have already been initialized
      */
     public function init(
         ServicesInterface $services,
+        ListenersInterface $listeners,
         EventsInterface $events,
         ConfigInterface $config
     ) {
@@ -143,6 +146,9 @@ class Components extends AbstractContainer implements ComponentsInterface
         foreach ($this->container as $component) {
             if (method_exists($component, 'getServicesConfig')) {
                 $services->add($component->getServicesConfig());
+            }
+            if (method_exists($component, 'getListenersConfig')) {
+                $listeners->add($component->getListenersConfig());
             }
             if (method_exists($component, 'getEventsConfig')) {
                 foreach ($component->getEventsConfig() as $item) {

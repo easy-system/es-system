@@ -24,6 +24,8 @@ use ReflectionClass;
 
 class SystemTest extends \PHPUnit_Framework_TestCase
 {
+    protected $services;
+
     public function setUp()
     {
         if (! class_exists('Error', false)) {
@@ -31,6 +33,11 @@ class SystemTest extends \PHPUnit_Framework_TestCase
         }
         require_once 'SystemTestHelper.php';
         require_once 'FakeComponent.php';
+
+        $this->services = new Services();
+        Provider::setServices($this->services);
+
+        SystemTestHelper::resetSystem();
     }
 
     public function testConstructor()
@@ -47,30 +54,24 @@ class SystemTest extends \PHPUnit_Framework_TestCase
 
     public function testGetComponents()
     {
-        SystemTestHelper::resetSystem();
-
         $system = System::init();
         $this->assertInstanceOf(ComponentsInterface::CLASS, $system->getComponents());
     }
 
     public function testGetEvent()
     {
-        SystemTestHelper::resetSystem();
-
         $system = System::init();
         $this->assertInstanceOf(SystemEvent::CLASS, $system->getEvent());
     }
 
     public function testInitReturnsTheSystemInstance()
     {
-        SystemTestHelper::resetSystem();
         $system = System::init();
         $this->assertInstanceOf(System::CLASS, $system);
     }
 
     public function testInitReturnsTheSystemInstanceOnlyOnce()
     {
-        SystemTestHelper::resetSystem();
         $system = System::init();
         $this->assertInstanceOf(System::CLASS, $system);
 
@@ -79,15 +80,12 @@ class SystemTest extends \PHPUnit_Framework_TestCase
 
     public function testInitCreateConfig()
     {
-        SystemTestHelper::resetSystem();
-        Provider::setServices(new Services());
-
         $config = [
             'foo' => 'bar',
             'bat' => 'baz',
         ];
         System::init($config);
-        $services = Provider::getServices();
+        $services = $this->services;
 
         $this->assertTrue($services->has('Config'));
         $systemConfig = $services->get('Config');
@@ -98,20 +96,14 @@ class SystemTest extends \PHPUnit_Framework_TestCase
 
     public function testInitCreateEvents()
     {
-        SystemTestHelper::resetSystem();
-        Provider::setServices(new Services());
-
         System::init();
-        $services = Provider::getServices();
+        $services = $this->services;
         $this->assertTrue($services->has('Events'));
         $this->assertInstanceOf(EventsInterface::CLASS, $services->get('Events'));
     }
 
     public function testInitSetDevMode()
     {
-        SystemTestHelper::resetSystem();
-        Provider::setServices(new Services());
-
         $system = System::init([], false);
         $this->assertFalse($system->isDevMode());
         //
@@ -127,7 +119,6 @@ class SystemTest extends \PHPUnit_Framework_TestCase
                 FakeComponent::CLASS,
             ],
         ];
-        SystemTestHelper::resetSystem();
         $system     = System::init($config);
         $components = $system->getComponents();
         $this->assertTrue($components->has(FakeComponent::CLASS));
@@ -135,7 +126,6 @@ class SystemTest extends \PHPUnit_Framework_TestCase
 
     public function testInitInitializeComponents()
     {
-        SystemTestHelper::resetSystem();
         $system     = System::init();
         $components = $system->getComponents();
         $this->assertTrue($components->isInitialized());
@@ -148,7 +138,6 @@ class SystemTest extends \PHPUnit_Framework_TestCase
                 FakeComponent::CLASS,
             ],
         ];
-        SystemTestHelper::resetSystem();
         $system = System::init($config);
         $event  = $system->getEvent();
         $this->assertTrue($event->getResult(SystemEvent::INIT));
@@ -156,11 +145,8 @@ class SystemTest extends \PHPUnit_Framework_TestCase
 
     public function testRunCourse()
     {
-        SystemTestHelper::resetSystem();
-        Provider::setServices(new Services());
-
         $system   = System::init();
-        $services = Provider::getServices();
+        $services = $this->services;
         $events   = $this->getMock(Events::CLASS);
         $services->set('Events', $events);
         $course = [
@@ -184,11 +170,8 @@ class SystemTest extends \PHPUnit_Framework_TestCase
 
     public function testTriggerErrorBreakCource()
     {
-        SystemTestHelper::resetSystem();
-        Provider::setServices(new Services());
-
         $system   = System::init();
-        $services = Provider::getServices();
+        $services = $this->services;
         $events   = $this->getMock(Events::CLASS);
         $services->set('Events', $events);
 
@@ -218,11 +201,8 @@ class SystemTest extends \PHPUnit_Framework_TestCase
 
     public function testTriggerExceptionBreakCource()
     {
-        SystemTestHelper::resetSystem();
-        Provider::setServices(new Services());
-
         $system   = System::init();
-        $services = Provider::getServices();
+        $services = $this->services;
         $events   = $this->getMock(Events::CLASS);
         $services->set('Events', $events);
 
@@ -252,11 +232,8 @@ class SystemTest extends \PHPUnit_Framework_TestCase
 
     public function testSetsFinishResultBreakCource()
     {
-        SystemTestHelper::resetSystem();
-        Provider::setServices(new Services());
-
         $system   = System::init();
-        $services = Provider::getServices();
+        $services = $this->services;
         $events   = $this->getMock(Events::CLASS);
         $services->set('Events', $events);
 

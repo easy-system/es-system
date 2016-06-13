@@ -17,11 +17,11 @@ use Es\Component\ComponentInterface;
 class Component implements ComponentInterface
 {
     /**
-     * The configuration of services.
+     * The configuration of listeners.
      *
      * @var array
      */
-    protected $servicesConfig = [
+    protected $listenersConfig = [
         'Es.System.Listener.ConfigureCacheListener' => 'Es\System\Listener\ConfigureCacheListener',
     ];
 
@@ -63,13 +63,13 @@ class Component implements ComponentInterface
     }
 
     /**
-     * Gets the configuration of services.
+     * Gets the configuration of listeners.
      *
-     * @return array The configuration of services
+     * @return array The configuration of listeners
      */
-    public function getServicesConfig()
+    public function getListenersConfig()
     {
-        return $this->servicesConfig;
+        return $this->listenersConfig;
     }
 
     /**

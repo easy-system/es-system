@@ -11,6 +11,7 @@ namespace Es\System\Components;
 
 use Countable;
 use Es\Events\EventsInterface;
+use Es\Events\ListenersInterface;
 use Es\Services\ServicesInterface;
 use Es\System\ConfigInterface;
 use Iterator;
@@ -66,14 +67,16 @@ interface ComponentsInterface extends Countable, Iterator
     /**
      * Initializes components.
      *
-     * @param \Es\Services\ServicesInterface $services The services
-     * @param \Es\Events\EventsInterface     $events   The events
-     * @param \Es\System\ConfigInterface     $config   The system configuration
+     * @param \Es\Services\ServicesInterface $services  The services
+     * @param \Es\Events\ListenersInterface  $listeners The listeners
+     * @param \Es\Events\EventsInterface     $events    The events
+     * @param \Es\System\ConfigInterface     $config    The system configuration
      *
      * @throws \RuntimeException If the components have already been initialized
      */
     public function init(
         ServicesInterface $services,
+        ListenersInterface $listeners,
         EventsInterface $events,
         ConfigInterface $config
     );

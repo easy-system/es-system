@@ -11,6 +11,7 @@ namespace Es\System;
 
 use Error;
 use Es\Events\Events;
+use Es\Events\Listeners;
 use Es\Services\ServicesTrait;
 use Es\System\Components\Components;
 use Exception;
@@ -84,10 +85,13 @@ class System implements SystemInterface
         $systemConfig = new SystemConfig($config);
         $services->set('Config', $systemConfig);
 
+        $listeners = new Listeners();
+        $services->set('Listeners', $listeners);
+
         $events = new Events();
         $services->set('Events', $events);
 
-        $components->init($services, $events, $systemConfig);
+        $components->init($services, $listeners, $events, $systemConfig);
         $events->trigger($system->getEvent());
 
         return $system;
