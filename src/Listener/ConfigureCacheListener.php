@@ -12,7 +12,7 @@ namespace Es\System\Listener;
 use Es\Cache\Adapter\AbstractCache;
 use Es\Cache\CacheFactory;
 use Es\Services\ServicesTrait;
-use Es\System\ConfigInterface;
+use Es\System\ConfigTrait;
 use Es\System\SystemEvent;
 
 /**
@@ -20,7 +20,7 @@ use Es\System\SystemEvent;
  */
 class ConfigureCacheListener
 {
-    use ServicesTrait;
+    use ConfigTrait, ServicesTrait;
 
     /**
      * The adapter of cache.
@@ -60,32 +60,6 @@ class ConfigureCacheListener
         }
 
         return $this->cache;
-    }
-
-    /**
-     * Sets the system configuration.
-     *
-     * @param \Es\System\ConfigInterface $config The system configuration
-     */
-    public function setConfig(ConfigInterface $config)
-    {
-        $this->config = $config;
-    }
-
-    /**
-     * Gets the system configuration.
-     *
-     * @param \Es\System\ConfigInterface The system configuration
-     */
-    public function getConfig()
-    {
-        if (! $this->config) {
-            $services = $this->getServices();
-            $config   = $services->get('Config');
-            $this->setConfig($config);
-        }
-
-        return $this->config;
     }
 
     /**

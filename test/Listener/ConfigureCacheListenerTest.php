@@ -49,26 +49,6 @@ class ConfigureCacheListenerTest extends \PHPUnit_Framework_TestCase
         $listener->getCache();
     }
 
-    public function testSetConfig()
-    {
-        $config   = new SystemConfig();
-        $listener = new ConfigureCacheListener();
-        $listener->setConfig($config);
-        $this->assertSame($config, $listener->getConfig());
-    }
-
-    public function testGetConfig()
-    {
-        $config   = new SystemConfig();
-        $services = new Services();
-        $services->set('Config', $config);
-
-        $listener = new ConfigureCacheListener();
-        $listener->setServices($services);
-
-        $this->assertSame($config, $listener->getConfig());
-    }
-
     public function testConfigureFactory()
     {
         $config = [
