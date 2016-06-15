@@ -12,7 +12,7 @@ namespace Es\System;
 use Es\Services\Provider;
 
 /**
- * The recommended way to interact with system configuration.
+ * The accessors of system configuration.
  */
 trait ConfigTrait
 {
