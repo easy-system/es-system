@@ -9,7 +9,7 @@
  */
 namespace Es\System\Listener;
 
-use Es\Cache\Adapter\AbstractCache;
+use Es\Cache\AbstractCache;
 use Es\Cache\CacheFactory;
 use Es\Services\ServicesTrait;
 use Es\System\ConfigTrait;
@@ -39,7 +39,7 @@ class ConfigureCacheListener
     /**
      * Sets the cache adapter.
      *
-     * @param \Es\Cache\Adapter\AbstractCache $cache The cache adapter
+     * @param \Es\Cache\AbstractCache $cache The cache adapter
      */
     public function setCache(AbstractCache $cache)
     {
@@ -49,7 +49,7 @@ class ConfigureCacheListener
     /**
      * Gets the cache adapter.
      *
-     * @param \Es\Cache\Adapter\AbstractCache The cache adapter
+     * @param \Es\Cache\AbstractCache The cache adapter
      */
     public function getCache()
     {

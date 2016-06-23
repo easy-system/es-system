@@ -23,7 +23,7 @@ class ComponentsTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
-        $testDir = dirname(__DIR__) . DIRECTORY_SEPARATOR;
+        $testDir = dirname(__DIR__) . PHP_DS;
         require_once $testDir . 'FakeComponent.php';
     }
 
